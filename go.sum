@@ -20,8 +20,6 @@ github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZb
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/stretchr/testify v1.9.0 h1:HtqpIVDClZ4nwg75+f6Lvsy/wHu+3BoSGCbBAcpTsTg=
 github.com/stretchr/testify v1.9.0/go.mod h1:r2ic/lqez/lEtzL7wO/rwa5dbSLXVDPFyf8C91i36aY=
-github.com/todennus/config v0.1.0 h1:Hn/94h7ixZusxKeWDE97ACh8yY13orZ5jzjj3XJQzMQ=
-github.com/todennus/config v0.1.0/go.mod h1:fgtVj3lXHlgYdvZR6E+qxyhkqEbw35RcEeoBSAcVCTQ=
 github.com/todennus/x v0.1.0 h1:Q21H6ciFUvD1ai7ARpnAa9fFo15m7BDcz5tEY45PsqA=
 github.com/todennus/x v0.1.0/go.mod h1:4adItk4lQC/us337I8PEOf5zAd1WPknwlUQkfZfcWns=
 github.com/xybor-x/snowflake v0.0.0-20241003160244-6f05a74b7417 h1:EMthTCBBOfWcx8JQ47tC+hhbrt1xSIaAWBE8fohxwlU=

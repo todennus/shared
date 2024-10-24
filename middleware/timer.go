@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/todennus/config"
+	"github.com/todennus/shared/config"
 	"github.com/todennus/x/xcontext"
 )
 
