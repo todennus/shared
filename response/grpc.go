@@ -11,19 +11,19 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-type ResponseHandler[D any] struct {
+type GRPCResponseHandler[D any] struct {
 	err         error
 	resp        D
 	code        codes.Code
 	defaultCode codes.Code
 }
 
-func NewResponseHandler[D any](ctx context.Context, resp D, err error) *ResponseHandler[D] {
+func NewGRPCResponseHandler[D any](ctx context.Context, resp D, err error) *GRPCResponseHandler[D] {
 	if timeoutErr := context.Cause(ctx); timeoutErr != nil && errors.Is(timeoutErr, errordef.ErrServerTimeout) {
 		err = errordef.ErrServerTimeout.Hide(err, "timeout")
 	}
 
-	return (&ResponseHandler[D]{
+	return (&GRPCResponseHandler[D]{
 		err:  err,
 		resp: resp,
 		code: codes.Unknown,
@@ -31,12 +31,12 @@ func NewResponseHandler[D any](ctx context.Context, resp D, err error) *Response
 		Map(codes.DeadlineExceeded, errordef.ErrServerTimeout)
 }
 
-func (h *ResponseHandler[D]) WithDefaultCode(code codes.Code) *ResponseHandler[D] {
+func (h *GRPCResponseHandler[D]) WithDefaultCode(code codes.Code) *GRPCResponseHandler[D] {
 	h.defaultCode = code
 	return h
 }
 
-func (h *ResponseHandler[D]) Map(code codes.Code, errs ...error) *ResponseHandler[D] {
+func (h *GRPCResponseHandler[D]) Map(code codes.Code, errs ...error) *GRPCResponseHandler[D] {
 	if code == codes.Unknown {
 		panic("do not use code unknown")
 	}
@@ -59,7 +59,7 @@ func (h *ResponseHandler[D]) Map(code codes.Code, errs ...error) *ResponseHandle
 	return h
 }
 
-func (h *ResponseHandler[D]) Finalize(ctx context.Context) (D, error) {
+func (h *GRPCResponseHandler[D]) Finalize(ctx context.Context) (D, error) {
 	h.Map(codes.Internal)
 
 	if h.code == codes.Unknown {

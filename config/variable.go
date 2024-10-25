@@ -12,6 +12,7 @@ type Variable struct {
 	Authentication AuthenticationVariable `envconfig:"authentication"`
 	OAuth2         OAuth2Variable         `envconfig:"oauth2"`
 	Session        SessionVariable        `envconfig:"session"`
+	Service        ServiceVariable        `envconfig:"service"`
 }
 
 func DefaultVariable() Variable {
@@ -22,6 +23,7 @@ func DefaultVariable() Variable {
 		Authentication: DefaultAuthenticationVariable(),
 		OAuth2:         DefaultOAuth2Variable(),
 		Session:        DefaultSessionVariable(),
+		Service:        DefaultServiceVariable(),
 	}
 }
 
@@ -136,5 +138,15 @@ type SessionVariable struct {
 func DefaultSessionVariable() SessionVariable {
 	return SessionVariable{
 		Expiration: 24 * 60 * 60, // 24h
+	}
+}
+
+type ServiceVariable struct {
+	UserGRPCAddr string `envconfig:"user_grpc_addr"`
+}
+
+func DefaultServiceVariable() ServiceVariable {
+	return ServiceVariable{
+		UserGRPCAddr: "localhost:8081",
 	}
 }
