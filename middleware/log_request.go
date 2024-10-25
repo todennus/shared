@@ -8,7 +8,7 @@ import (
 	"github.com/todennus/x/xcontext"
 )
 
-func Timer(config *config.Config) func(next http.Handler) http.Handler {
+func LogRequest(config *config.Config) func(next http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			ctx := r.Context()

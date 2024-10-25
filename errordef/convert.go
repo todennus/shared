@@ -37,7 +37,7 @@ func ConvertGRPCError(err error) error {
 	}
 
 	msg := st.Message()
-	code, description, found := strings.Cut(msg, ": ")
+	code, description, found := strings.Cut(msg, ":")
 	if !found {
 		return err
 	}
