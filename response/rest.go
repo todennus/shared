@@ -94,7 +94,11 @@ func SetQuery(ctx context.Context, q url.Values, err error) {
 	q.Set("request_id", errResp.Metadata.RequestID)
 }
 
-func RESTWriteLogInvalidRequestError(ctx context.Context, w http.ResponseWriter, err error) {
+func RESTWriteError(ctx context.Context, w http.ResponseWriter, code int, err error) {
+	Write(ctx, w, code, NewRESTErrorResponse(ctx, err))
+}
+
+func RESTWriteAndLogInvalidRequestError(ctx context.Context, w http.ResponseWriter, err error) {
 	if err == nil {
 		panic("do not pass a nil error here")
 	}

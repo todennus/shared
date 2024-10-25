@@ -8,10 +8,6 @@ import (
 	"github.com/todennus/x/xhttp"
 )
 
-func WriteError(ctx context.Context, w http.ResponseWriter, code int, err error) {
-	Write(ctx, w, code, NewRESTErrorResponse(ctx, err))
-}
-
 func Write(ctx context.Context, w http.ResponseWriter, code int, resp any) {
 	xcontext.SessionManager(ctx).Save(w, xcontext.Session(ctx))
 	if err := xhttp.WriteResponseJSON(w, code, resp); err != nil {
