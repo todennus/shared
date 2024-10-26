@@ -142,11 +142,13 @@ func DefaultSessionVariable() SessionVariable {
 }
 
 type ServiceVariable struct {
-	UserGRPCAddr string `envconfig:"user_grpc_addr"`
+	UserGRPCAddr         string `envconfig:"user_grpc_addr"`
+	OAuth2ClientGRPCAddr string `envconfig:"oauth2_client_grpc_addr"`
 }
 
 func DefaultServiceVariable() ServiceVariable {
 	return ServiceVariable{
-		UserGRPCAddr: "localhost:8081",
+		UserGRPCAddr:         "localhost:8081",
+		OAuth2ClientGRPCAddr: "localhost:8082",
 	}
 }

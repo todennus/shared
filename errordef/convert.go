@@ -36,8 +36,7 @@ func ConvertGRPCError(err error) error {
 		return err
 	}
 
-	msg := st.Message()
-	code, description, found := strings.Cut(msg, ":")
+	code, description, found := strings.Cut(st.Message(), ":")
 	if !found {
 		return err
 	}
@@ -60,13 +59,13 @@ func ConvertGRPCError(err error) error {
 	case "forbidden":
 		return xerror.Enrich(ErrForbidden, description)
 	case "invalid_client":
-		return xerror.Enrich(ErrClientInvalid, description)
+		return xerror.Enrich(ErrOAuth2ClientInvalid, description)
 	case "invalid_scope":
-		return xerror.Enrich(ErrScopeInvalid, description)
-	case "access_denined":
-		return xerror.Enrich(ErrAccessDenied, description)
+		return xerror.Enrich(ErrOAuth2ScopeInvalid, description)
+	case "access_denied":
+		return xerror.Enrich(ErrOAuth2AccessDenied, description)
 	case "invalid_grant":
-		return xerror.Enrich(ErrTokenInvalidGrant, description)
+		return xerror.Enrich(ErrOAuth2InvalidGrant, description)
 	default:
 		return err
 	}

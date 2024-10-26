@@ -19,13 +19,12 @@ var (
 	ErrUnauthenticated = errors.New("unauthenticated")
 	ErrForbidden       = errors.New("forbidden")
 
-	ErrClientInvalid = errors.New("invalid_client")
-
-	ErrScopeInvalid = errors.New("invalid_scope")
-
-	ErrAccessDenied      = errors.New("access_denined")
-	ErrTokenInvalidGrant = errors.New("invalid_grant")
+	// OAuth2 flow error
+	ErrOAuth2ClientInvalid = errors.New("invalid_client")
+	ErrOAuth2ScopeInvalid  = errors.New("invalid_scope")
+	ErrOAuth2AccessDenied  = errors.New("access_denied")
+	ErrOAuth2InvalidGrant  = errors.New("invalid_grant")
 )
 
 // For handling domain error
-var Domain = xerror.NewWrapperConfigs(ErrServer, ErrDomainKnown)
+var DomainWrapper = xerror.NewWrapperConfigs(ErrServer, ErrDomainKnown)
