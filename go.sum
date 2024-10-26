@@ -32,8 +32,10 @@ github.com/redis/go-redis/v9 v9.7.0 h1:HhLSs+B6O021gwzl+locl0zEDnyNkxMtf/Z3NNBMa
 github.com/redis/go-redis/v9 v9.7.0/go.mod h1:f6zhXITC7JUJIlPEiBOTXxJgPLdZcA93GewI7inzyWw=
 github.com/stretchr/testify v1.9.0 h1:HtqpIVDClZ4nwg75+f6Lvsy/wHu+3BoSGCbBAcpTsTg=
 github.com/stretchr/testify v1.9.0/go.mod h1:r2ic/lqez/lEtzL7wO/rwa5dbSLXVDPFyf8C91i36aY=
-github.com/todennus/x v0.1.2 h1:ydSR32d7kPAt+8pIC5kt+sk8iTzhZLxHvFjeTnz3wag=
-github.com/todennus/x v0.1.2/go.mod h1:4adItk4lQC/us337I8PEOf5zAd1WPknwlUQkfZfcWns=
+github.com/todennus/proto v0.1.1 h1:SslZmLol/YHLzK5B4Zcqh5jm8hSuLKxXLoA1jMx2EbA=
+github.com/todennus/proto v0.1.1/go.mod h1:KJntlZG3lvSZTF954xU/D4TLIcE0wptBTYv5PbmOSq8=
+github.com/todennus/x v0.1.3 h1:tpcmlEHBIiTLu4CDRRRXShMDk4jx/G/CKAX0zxWPJoA=
+github.com/todennus/x v0.1.3/go.mod h1:4adItk4lQC/us337I8PEOf5zAd1WPknwlUQkfZfcWns=
 github.com/xybor-x/snowflake v1.0.0 h1:cpBLbuBeUrHeBN7behThldVqJ0ZTtQD/M87Vk67Xpl4=
 github.com/xybor-x/snowflake v1.0.0/go.mod h1:oriPbmMgpBuLkAU1kcwP+JWWvis7NWWN5YAM/B2J95w=
 golang.org/x/crypto v0.28.0 h1:GBDwsMXVQi34v5CCYUm2jkJvu4cbtru2U4TN2PSyQnw=
@@ -48,8 +50,8 @@ google.golang.org/genproto/googleapis/rpc v0.0.0-20240814211410-ddb44dafa142 h1:
 google.golang.org/genproto/googleapis/rpc v0.0.0-20240814211410-ddb44dafa142/go.mod h1:UqMtugtsSgubUsoxbuAoiCXvqvErP7Gf0so0mK9tHxU=
 google.golang.org/grpc v1.67.1 h1:zWnc1Vrcno+lHZCOofnIMvycFcc0QRGIzm9dhnDX68E=
 google.golang.org/grpc v1.67.1/go.mod h1:1gLDyUQU7CTLJI90u3nXZ9ekeghjeM7pTDZlqFNg2AA=
-google.golang.org/protobuf v1.34.2 h1:6xV6lTsCfpGD21XK49h7MhtcApnLqkfYgPcdHftf6hg=
-google.golang.org/protobuf v1.34.2/go.mod h1:qYOHts0dSfpeUzUFpOMr/WGzszTmLH+DiWniOlNbLDw=
+google.golang.org/protobuf v1.35.1 h1:m3LfL6/Ca+fqnjnlqQXNpFPABW1UD7mjh8KO2mKFytA=
+google.golang.org/protobuf v1.35.1/go.mod h1:9fA7Ob0pmnwhb644+1+CVWFRbNajQ6iRojtC/QF5bRE=
 gopkg.in/yaml.v3 v3.0.1 h1:fxVm/GzAzEWqLHuvctI91KS9hhNmmWOoWu0XTYJS7CA=
 gopkg.in/yaml.v3 v3.0.1/go.mod h1:K4uyk7z7BCEPqu6E+C64Yfv1cQ7kz7rIZviUmN+EgEM=
 gorm.io/gorm v1.25.12 h1:I0u8i2hWQItBq1WfE0o2+WuL9+8L21K9e2HHSTE/0f8=
