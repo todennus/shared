@@ -8,7 +8,7 @@ require (
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/redis/go-redis/v9 v9.7.0
 	github.com/todennus/proto v0.1.1
-	github.com/todennus/x v0.1.3
+	github.com/todennus/x v0.2.0
 	github.com/xybor-x/snowflake v1.0.0
 	google.golang.org/grpc v1.67.1
 	gorm.io/gorm v1.25.12
