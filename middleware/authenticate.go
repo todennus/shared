@@ -5,11 +5,13 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/todennus/shared/errordef"
 	"github.com/todennus/shared/response"
 	"github.com/todennus/shared/scopedef"
 	"github.com/todennus/shared/tokendef"
 	"github.com/todennus/x/token"
 	"github.com/todennus/x/xcontext"
+	"github.com/todennus/x/xerror"
 )
 
 func WithAuthenticate(ctx context.Context, authorization string, engine token.Engine) context.Context {
@@ -61,8 +63,8 @@ func RequireAuthentication(handler http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
 		if xcontext.RequestUserID(ctx) == 0 {
-			response.Write(ctx, w, http.StatusUnauthorized,
-				response.NewRESTErrorResponseWithMessage(ctx, "unauthenticated", "require authentication to access api"))
+			response.Write(ctx, w, http.StatusUnauthorized, response.NewRESTErrorResponse(
+				ctx, xerror.Enrich(errordef.ErrUnauthenticated, "require authentication to access api")))
 		} else {
 			handler(w, r)
 		}
