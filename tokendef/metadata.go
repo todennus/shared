@@ -61,22 +61,3 @@ func (claims *OAuth2StandardClaims) Valid() error {
 
 	return nil
 }
-
-type OAuth2AccessToken struct {
-	*OAuth2StandardClaims
-	Scope string `json:"scope"`
-}
-
-type OAuth2RefreshToken struct {
-	*OAuth2StandardClaims
-	SequenceNumber int    `json:"seq"`
-	Scope          string `json:"scope"`
-}
-
-type OAuth2IDToken struct {
-	*OAuth2StandardClaims
-
-	Username    string `json:"username"`
-	Displayname string `json:"display_name"`
-	Role        string `json:"role"`
-}

@@ -16,17 +16,10 @@ type Config struct {
 	Secret   Secret
 	Variable Variable
 
+	SnowflakeNode  *snowflake.Node
 	Logger         logging.Logger
 	TokenEngine    token.Engine
 	SessionManager *session.Manager
-}
-
-func (c *Config) NewSnowflakeNode() *snowflake.Node {
-	result, err := snowflake.NewNode(int64(c.Variable.Server.NodeID))
-	if err != nil {
-		panic(err)
-	}
-	return result
 }
 
 func Load(paths ...string) (*Config, error) {
@@ -79,19 +72,25 @@ func (c *Config) loadInfras() error {
 	// Token engine
 	tokenEngine := token.NewJWTEngine()
 
-	authSecrets := c.Secret.Authentication
-	if err := tokenEngine.WithRSA(authSecrets.TokenRSAPrivateKey, authSecrets.TokenRSAPublicKey); err != nil {
+	oauth2Secrets := c.Secret.OAuth2
+	if err := tokenEngine.WithRSA(oauth2Secrets.TokenRSAPrivateKey, oauth2Secrets.TokenRSAPublicKey); err != nil {
 		return err
 	}
 
-	if authSecrets.TokenHMACSecretKey != "" {
-		if err := tokenEngine.WithHMAC(authSecrets.TokenHMACSecretKey); err != nil {
+	if oauth2Secrets.TokenHMACSecretKey != "" {
+		if err := tokenEngine.WithHMAC(oauth2Secrets.TokenHMACSecretKey); err != nil {
 			return err
 		}
 	}
 
 	c.TokenEngine = tokenEngine
 	c.SessionManager = session.NewManager("/", c.Variable.Session.Expiration)
+
+	var err error
+	c.SnowflakeNode, err = snowflake.NewNode(int64(c.Variable.Server.NodeID))
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
