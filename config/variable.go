@@ -6,24 +6,23 @@ import (
 )
 
 type Variable struct {
-	Server         ServerVariable         `envconfig:"server"`
-	Postgres       PostgresVariable       `envconfig:"postgres"`
-	Redis          RedisVariable          `envconfig:"redis"`
-	Authentication AuthenticationVariable `envconfig:"authentication"`
-	OAuth2         OAuth2Variable         `envconfig:"oauth2"`
-	Session        SessionVariable        `envconfig:"session"`
-	Service        ServiceVariable        `envconfig:"service"`
+	Server       ServerVariable       `envconfig:"server"`
+	Postgres     PostgresVariable     `envconfig:"postgres"`
+	Redis        RedisVariable        `envconfig:"redis"`
+	OAuth2       OAuth2Variable       `envconfig:"oauth2"`
+	OAuth2Client OAuth2ClientVariable `envconfig:"oauth2_client"`
+	Session      SessionVariable      `envconfig:"session"`
+	Service      ServiceVariable      `envconfig:"service"`
 }
 
 func DefaultVariable() Variable {
 	return Variable{
-		Server:         DefaultServerVariable(),
-		Postgres:       DefaultPostgresVariable(),
-		Redis:          DefaultRedisVariable(),
-		Authentication: DefaultAuthenticationVariable(),
-		OAuth2:         DefaultOAuth2Variable(),
-		Session:        DefaultSessionVariable(),
-		Service:        DefaultServiceVariable(),
+		Server:   DefaultServerVariable(),
+		Postgres: DefaultPostgresVariable(),
+		Redis:    DefaultRedisVariable(),
+		OAuth2:   DefaultOAuth2Variable(),
+		Session:  DefaultSessionVariable(),
+		Service:  DefaultServiceVariable(),
 	}
 }
 
@@ -71,24 +70,14 @@ func DefaultRedisVariable() RedisVariable {
 	}
 }
 
-type AuthenticationVariable struct {
-	AccessTokenExpiration  int    `envconfig:"access_token_expiration"`  // in second
-	RefreshTokenExpiration int    `envconfig:"refresh_token_expiration"` // in second
-	IDTokenExpiration      int    `envconfig:"id_token_expiration"`      // in second
-	TokenIssuer            string `envconfig:"token_issuer"`
-}
-
-func DefaultAuthenticationVariable() AuthenticationVariable {
-	return AuthenticationVariable{
-		AccessTokenExpiration:  60,           // 60s
-		RefreshTokenExpiration: 60 * 60,      // 1h
-		IDTokenExpiration:      24 * 60 * 60, // 1d
-	}
-}
-
 type OAuth2Variable struct {
-	IdPLoginURL        string `envconfig:"idp_login_url"`
-	ClientSecretLength int    `envconfig:"client_secret_length"`
+	IdPLoginURL string `envconfig:"idp_login_url"`
+
+	TokenIssuer string `envconfig:"token_issuer"`
+
+	AccessTokenExpiration  int `envconfig:"access_token_expiration"`  // in second
+	RefreshTokenExpiration int `envconfig:"refresh_token_expiration"` // in second
+	IDTokenExpiration      int `envconfig:"id_token_expiration"`      // in second
 
 	// AuthorizationCodeFlowExpiration is the timeout which the code must be
 	// exchanged.
@@ -122,12 +111,25 @@ type OAuth2Variable struct {
 func DefaultOAuth2Variable() OAuth2Variable {
 	return OAuth2Variable{
 		IdPLoginURL:                      "http://localhost:7063/login",
-		ClientSecretLength:               64,
+		TokenIssuer:                      "todennus",
+		AccessTokenExpiration:            60,                // 60s
+		RefreshTokenExpiration:           60 * 60,           // 1h
+		IDTokenExpiration:                24 * 60 * 60,      // 1d
 		AuthorizationCodeFlowExpiration:  10 * 60,           // 10m
 		AuthenticationCallbackExpiration: 15 * 60,           // 15m
 		SessionUpdateExpiration:          15,                // 15s
 		ConsentSessionExpiration:         15,                // 15s
 		ConsentExpiration:                30 * 24 * 60 * 60, // 30d
+	}
+}
+
+type OAuth2ClientVariable struct {
+	SecretLength int `envconfig:"secret_length"`
+}
+
+func DefaultOAuth2ClientVariable() OAuth2ClientVariable {
+	return OAuth2ClientVariable{
+		SecretLength: 64,
 	}
 }
 
