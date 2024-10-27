@@ -29,14 +29,8 @@ func WithAuthenticate(ctx context.Context, authorization string, engine token.En
 	}
 
 	accessToken := tokendef.OAuth2AccessToken{}
-	ok, err := engine.Validate(ctx, token, &accessToken)
-	if err != nil {
+	if err := engine.Validate(ctx, token, &accessToken); err != nil {
 		xcontext.Logger(ctx).Debug("failed-to-parse-token", "err", err)
-		return ctx
-	}
-
-	if !ok {
-		xcontext.Logger(ctx).Debug("expired token")
 		return ctx
 	}
 

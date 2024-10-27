@@ -9,19 +9,19 @@ import (
 type ConfidentialRequirementType int
 
 const (
-	RequireConfidential ConfidentialRequirementType = iota
-	NotRequireConfidential
-	DependOnClientConfidential
+	CRTRequire ConfidentialRequirementType = iota
+	CRTNotRequire
+	CRTDependOnType
 )
 
 func ConfidentialRequirementTypeFromGRPC(req dto.OAuth2ClientConfidentialRequirement) ConfidentialRequirementType {
 	switch req {
 	case dto.OAuth2ClientConfidentialRequirement_DEPEND:
-		return DependOnClientConfidential
+		return CRTDependOnType
 	case dto.OAuth2ClientConfidentialRequirement_NOT_REQUIRE:
-		return NotRequireConfidential
+		return CRTNotRequire
 	case dto.OAuth2ClientConfidentialRequirement_REQUIRE:
-		return RequireConfidential
+		return CRTRequire
 	default:
 		panic(fmt.Sprintf("invalid requirement %d", req))
 	}
@@ -29,11 +29,11 @@ func ConfidentialRequirementTypeFromGRPC(req dto.OAuth2ClientConfidentialRequire
 
 func ConfidentialRequirementTypeToGRPC(req ConfidentialRequirementType) dto.OAuth2ClientConfidentialRequirement {
 	switch req {
-	case DependOnClientConfidential:
+	case CRTDependOnType:
 		return dto.OAuth2ClientConfidentialRequirement_DEPEND
-	case RequireConfidential:
+	case CRTRequire:
 		return dto.OAuth2ClientConfidentialRequirement_REQUIRE
-	case NotRequireConfidential:
+	case CRTNotRequire:
 		return dto.OAuth2ClientConfidentialRequirement_NOT_REQUIRE
 	default:
 		panic(fmt.Sprintf("invalid requirement %d", req))
