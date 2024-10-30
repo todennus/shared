@@ -5,7 +5,7 @@ import (
 	"errors"
 
 	"github.com/todennus/shared/errordef"
-	"github.com/todennus/x/xcontext"
+	"github.com/todennus/shared/xcontext"
 	"github.com/todennus/x/xerror"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"

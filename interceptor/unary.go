@@ -4,14 +4,17 @@ import (
 	"context"
 	"time"
 
+	"github.com/todennus/shared/authentication"
 	"github.com/todennus/shared/config"
 	"github.com/todennus/shared/errordef"
 	"github.com/todennus/shared/middleware"
+	"github.com/todennus/shared/xcontext"
 	"github.com/todennus/x/token"
-	"github.com/todennus/x/xcontext"
 	"github.com/todennus/x/xcrypto"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
+	"google.golang.org/grpc/status"
 )
 
 type UnaryInterceptor struct {
@@ -78,6 +81,14 @@ func (i *UnaryInterceptor) Interceptor(config *config.Config) grpc.UnaryServerIn
 	}
 }
 
+func RequireAuthentication(ctx context.Context) error {
+	if xcontext.RequestSubjectID(ctx) == 0 {
+		return status.Errorf(codes.Unauthenticated, "require authenticate to access to api")
+	}
+
+	return nil
+}
+
 func withRequestID(ctx context.Context) context.Context {
 	ctx = xcontext.WithRequestID(ctx, xcrypto.RandString(16))
 	logger := xcontext.Logger(ctx).With("request_id", xcontext.RequestID(ctx))
@@ -104,5 +115,5 @@ func withAuthenticate(ctx context.Context, engine token.Engine) context.Context 
 		return ctx
 	}
 
-	return middleware.WithAuthenticate(ctx, authorization[0], engine)
+	return authentication.WithAuthenticate(ctx, authorization[0], engine)
 }

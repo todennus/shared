@@ -3,8 +3,8 @@ package middleware
 import (
 	"net/http"
 
+	"github.com/todennus/shared/xcontext"
 	"github.com/todennus/x/session"
-	"github.com/todennus/x/xcontext"
 )
 
 func WithSession(manager *session.Manager) func(http.Handler) http.Handler {
