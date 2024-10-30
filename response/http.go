@@ -4,7 +4,7 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/todennus/x/xcontext"
+	"github.com/todennus/shared/xcontext"
 	"github.com/todennus/x/xhttp"
 )
 

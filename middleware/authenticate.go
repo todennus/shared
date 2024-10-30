@@ -1,46 +1,15 @@
 package middleware
 
 import (
-	"context"
 	"net/http"
-	"strings"
 
+	"github.com/todennus/shared/authentication"
 	"github.com/todennus/shared/errordef"
 	"github.com/todennus/shared/response"
-	"github.com/todennus/shared/scopedef"
-	"github.com/todennus/shared/tokendef"
+	"github.com/todennus/shared/xcontext"
 	"github.com/todennus/x/token"
-	"github.com/todennus/x/xcontext"
 	"github.com/todennus/x/xerror"
 )
-
-func WithAuthenticate(ctx context.Context, authorization string, engine token.Engine) context.Context {
-	if authorization == "" {
-		return ctx
-	}
-
-	tokenType, token, found := strings.Cut(authorization, " ")
-	if !found {
-		return ctx
-	}
-
-	if engine.Type() != tokenType {
-		return ctx
-	}
-
-	accessToken := tokendef.OAuth2AccessToken{}
-	if err := engine.Validate(ctx, token, &accessToken); err != nil {
-		xcontext.Logger(ctx).Debug("failed-to-parse-token", "err", err)
-		return ctx
-	}
-
-	ctx = xcontext.WithRequestUserID(ctx, accessToken.SnowflakeSub())
-	ctx = xcontext.WithScope(ctx, scopedef.Engine.ParseScopes(accessToken.Scope))
-
-	xcontext.Logger(ctx).Debug("auth-info", "uid", accessToken.Subject, "scope", accessToken.Scope)
-
-	return ctx
-}
 
 func Authentication(engine token.Engine) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
@@ -48,7 +17,7 @@ func Authentication(engine token.Engine) func(http.Handler) http.Handler {
 			ctx := r.Context()
 			authorization := r.Header.Get("Authorization")
 
-			next.ServeHTTP(w, r.WithContext(WithAuthenticate(ctx, authorization, engine)))
+			next.ServeHTTP(w, r.WithContext(authentication.WithAuthenticate(ctx, authorization, engine)))
 		})
 	}
 }
@@ -56,7 +25,7 @@ func Authentication(engine token.Engine) func(http.Handler) http.Handler {
 func RequireAuthentication(handler http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
-		if xcontext.RequestUserID(ctx) == 0 {
+		if xcontext.RequestSubjectID(ctx) == 0 {
 			response.Write(ctx, w, http.StatusUnauthorized, response.NewRESTErrorResponse(
 				ctx, xerror.Enrich(errordef.ErrUnauthenticated, "require authentication to access api")))
 		} else {

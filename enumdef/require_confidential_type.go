@@ -6,15 +6,15 @@ import (
 	"github.com/todennus/proto/gen/service/dto"
 )
 
-type ConfidentialRequirementType int
+type OAuth2ClientConfidentialRequirement int
 
 const (
-	CRTRequire ConfidentialRequirementType = iota
+	CRTRequire OAuth2ClientConfidentialRequirement = iota
 	CRTNotRequire
 	CRTDependOnType
 )
 
-func ConfidentialRequirementTypeFromGRPC(req dto.OAuth2ClientConfidentialRequirement) ConfidentialRequirementType {
+func OAuth2ClientConfidentialRequirementTypeFromGRPC(req dto.OAuth2ClientConfidentialRequirement) OAuth2ClientConfidentialRequirement {
 	switch req {
 	case dto.OAuth2ClientConfidentialRequirement_DEPEND:
 		return CRTDependOnType
@@ -27,7 +27,7 @@ func ConfidentialRequirementTypeFromGRPC(req dto.OAuth2ClientConfidentialRequire
 	}
 }
 
-func ConfidentialRequirementTypeToGRPC(req ConfidentialRequirementType) dto.OAuth2ClientConfidentialRequirement {
+func OAuth2ClientConfidentialRequirementTypeToGRPC(req OAuth2ClientConfidentialRequirement) dto.OAuth2ClientConfidentialRequirement {
 	switch req {
 	case CRTDependOnType:
 		return dto.OAuth2ClientConfidentialRequirement_DEPEND

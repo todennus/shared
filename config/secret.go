@@ -5,6 +5,7 @@ type Secret struct {
 	OAuth2   OAuth2Secret   `envconfig:"oauth2"`
 	Redis    RedisSecret    `envconfig:"redis"`
 	Session  SessionSecret  `envconfig:"session"`
+	Service  ServiceSecret  `envconfig:"service"`
 }
 
 type PostgresSecret struct {
@@ -31,4 +32,9 @@ type RedisSecret struct {
 type SessionSecret struct {
 	AuthenticationKey string `envconfig:"authentication_key"`
 	EncryptionKey     string `envconfig:"encryption_key"`
+}
+
+type ServiceSecret struct {
+	ClientID     string `envconfig:"client_id"`
+	ClientSecret string `envconfig:"client_secret"`
 }

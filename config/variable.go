@@ -144,12 +144,14 @@ func DefaultSessionVariable() SessionVariable {
 }
 
 type ServiceVariable struct {
+	OAuth2TokenURL       string `envconfig:"oauth2_token_url"`
 	UserGRPCAddr         string `envconfig:"user_grpc_addr"`
 	OAuth2ClientGRPCAddr string `envconfig:"oauth2_client_grpc_addr"`
 }
 
 func DefaultServiceVariable() ServiceVariable {
 	return ServiceVariable{
+		OAuth2TokenURL:       "http://localhost:8080/oauth2/token",
 		UserGRPCAddr:         "localhost:8081",
 		OAuth2ClientGRPCAddr: "localhost:8082",
 	}

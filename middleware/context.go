@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/todennus/shared/config"
-	"github.com/todennus/x/xcontext"
+	"github.com/todennus/shared/xcontext"
 	"github.com/todennus/x/xcrypto"
 )
 

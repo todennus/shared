@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/todennus/shared/errordef"
-	"github.com/todennus/x/xcontext"
+	"github.com/todennus/shared/xcontext"
 	"github.com/todennus/x/xerror"
 	"github.com/todennus/x/xhttp"
 )
