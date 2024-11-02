@@ -3,6 +3,7 @@ package authentication
 import (
 	"context"
 	"fmt"
+	"sync"
 
 	"github.com/todennus/shared/xcontext"
 	"golang.org/x/oauth2"
@@ -11,6 +12,7 @@ import (
 
 type GrpcAuthorization struct {
 	t      *oauth2.Token
+	mu     sync.Mutex
 	source func(context.Context) oauth2.TokenSource
 }
 
@@ -20,11 +22,18 @@ func NewGrpcAuthorization(source func(context.Context) oauth2.TokenSource) *Grpc
 
 func (a *GrpcAuthorization) Context(ctx context.Context) context.Context {
 	if !a.t.Valid() {
-		var err error
-		a.t, err = oauth2.ReuseTokenSource(a.t, a.source(ctx)).Token()
-		if err != nil {
-			xcontext.Logger(ctx).Warn("failed-to-get-token-source", "err", err)
-			return ctx
+		a.mu.Lock()
+		defer a.mu.Unlock()
+
+		if !a.t.Valid() {
+			var err error
+			a.t, err = a.source(ctx).Token()
+			if err != nil {
+				xcontext.Logger(ctx).Warn("failed-to-get-token-source", "err", err)
+				return ctx
+			}
+
+			xcontext.Logger(ctx).Info("request-new-token", "expiry", a.t.Expiry)
 		}
 	}
 

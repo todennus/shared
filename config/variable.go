@@ -2,6 +2,7 @@ package config
 
 import (
 	"github.com/todennus/x/logging"
+	"github.com/todennus/x/mime"
 	gormlogger "gorm.io/gorm/logger"
 )
 
@@ -9,10 +10,13 @@ type Variable struct {
 	Server       ServerVariable       `envconfig:"server"`
 	Postgres     PostgresVariable     `envconfig:"postgres"`
 	Redis        RedisVariable        `envconfig:"redis"`
+	Minio        MinioVariable        `envconfig:"minio"`
 	OAuth2       OAuth2Variable       `envconfig:"oauth2"`
 	OAuth2Client OAuth2ClientVariable `envconfig:"oauth2_client"`
 	Session      SessionVariable      `envconfig:"session"`
 	Service      ServiceVariable      `envconfig:"service"`
+	File         FileVariable         `envconfig:"file"`
+	User         UserVariable         `envconfig:"user"`
 }
 
 func DefaultVariable() Variable {
@@ -20,9 +24,12 @@ func DefaultVariable() Variable {
 		Server:   DefaultServerVariable(),
 		Postgres: DefaultPostgresVariable(),
 		Redis:    DefaultRedisVariable(),
+		Minio:    DefaultMinioVariable(),
 		OAuth2:   DefaultOAuth2Variable(),
 		Session:  DefaultSessionVariable(),
 		Service:  DefaultServiceVariable(),
+		File:     DefaultFileVariable(),
+		User:     DefaultUserVariable(),
 	}
 }
 
@@ -31,7 +38,7 @@ type ServerVariable struct {
 	Port           int    `envconfig:"port"`
 	NodeID         int    `envconfig:"nodeid"`
 	LogLevel       int    `envconfig:"loglevel"`
-	RequestTimeout int    `envconfig:"timeout"` // The timeout of each request (in millisecond).
+	RequestTimeout int    `envconfig:"request_timeout"` // The timeout of each request (in millisecond).
 }
 
 func DefaultServerVariable() ServerVariable {
@@ -70,6 +77,16 @@ func DefaultRedisVariable() RedisVariable {
 	}
 }
 
+type MinioVariable struct {
+	Endpoint string `envconfig:"endpoint"`
+}
+
+func DefaultMinioVariable() MinioVariable {
+	return MinioVariable{
+		Endpoint: "localhost:9000",
+	}
+}
+
 type OAuth2Variable struct {
 	IdPLoginURL string `envconfig:"idp_login_url"`
 
@@ -79,32 +96,28 @@ type OAuth2Variable struct {
 	RefreshTokenExpiration int `envconfig:"refresh_token_expiration"` // in second
 	IDTokenExpiration      int `envconfig:"id_token_expiration"`      // in second
 
-	// AuthorizationCodeFlowExpiration is the timeout which the code must be
-	// exchanged.
+	// AuthorizationCodeFlowExpiration is the duration during which the code
+	// must be exchanged.
 	AuthorizationCodeFlowExpiration int `envconfig:"authorization_code_flow_expiration"` // in second
 
-	// AuthenticationCallbackExpiration is the timeout which the authorization
-	// flow is waiting for the authentication result. Within this time, the IdP
-	// must send the result to /auth/callback. Otherwise, user must go back to
-	// the Client App to authenticate again.
+	// AuthenticationCallbackExpiration is the duration during which the IdP
+	// must send the result to /auth/callback. Otherwise, the user must return
+	// to the Client App to authenticate again.
 	AuthenticationCallbackExpiration int `envconfig:"authentication_callback_expiration"` // in second
 
-	// SessionUpdateExpiration is the timeout which the authentication result
-	// is stored. Within this time, user must be redirected to /session/update
-	// to update the session. Otherwise, user may be redirected to the login
-	// page again.
+	// SessionUpdateExpiration is the duration during which the user must be
+	// redirected to /session/update to update their session. Otherwise, the
+	// user will be redirected to the IdP login page again.
 	SessionUpdateExpiration int `envconfig:"session_update_expiration"` // in second
 
-	// ConsentSessionExpiration is the timeout which consent failure result is
-	// temporarily stored. Within this time, user must be redirected to
-	// /oauth2/authorize to responds to Client about the failure result.
-	// Otherwise, user will be redirected to consent page again.
+	// ConsentSessionExpiration is the duration during which the user must be
+	// redirected to /oauth2/authorize to responds to Client about the consent
+	// result. Otherwise, the user will be redirected to the consent page again.
 	ConsentSessionExpiration int `envconfig:"consent_session_expiration"` // in second
 
-	// ConsentExpiration is the timeout which the consent success result is
-	// stored. Within this time, every request to /oauth2/authorize will be
-	// automatically accepted by user. After this time, user will be redirected
-	// to consent page again.
+	// ConsentExpiration is the duration during which every request to
+	// /oauth2/authorize will be automatically consented to by the user. After
+	// this period, the user will be redirected to the consent page again.
 	ConsentExpiration int `envconfig:"consent_expiration"` // in second
 }
 
@@ -147,6 +160,7 @@ type ServiceVariable struct {
 	OAuth2TokenURL       string `envconfig:"oauth2_token_url"`
 	UserGRPCAddr         string `envconfig:"user_grpc_addr"`
 	OAuth2ClientGRPCAddr string `envconfig:"oauth2_client_grpc_addr"`
+	FileGRPCAddr         string `envconfig:"file_grpc_addr"`
 }
 
 func DefaultServiceVariable() ServiceVariable {
@@ -154,5 +168,52 @@ func DefaultServiceVariable() ServiceVariable {
 		OAuth2TokenURL:       "http://localhost:8080/oauth2/token",
 		UserGRPCAddr:         "localhost:8081",
 		OAuth2ClientGRPCAddr: "localhost:8082",
+		FileGRPCAddr:         "localhost:8085",
+	}
+}
+
+type FileVariable struct {
+	DefaultImageAllowedTypes []string `envconfig:"default_image_allowed_types"`
+	DefaultMaxSize           int      `envconfig:"default_max_size"`
+
+	// UploadSessionExpiration is the duration during which the user can use the
+	// upload_token to upload a file.
+	UploadSessionExpiration int `envconfig:"upload_session_expiration"`
+
+	// TemporaryFileExpiration is the duration during which the user can use the
+	// session_token to performe a specific action on the uploaded file like
+	// setting an avatar, sending an image to a chat room, etc.
+	TemporaryFileExpiration int `envconfig:"temporary_file_expiration"`
+
+	StorageImageBucket     string `envconfig:"storage_image_bucket"`
+	StorageTemporaryBucket string `envconfig:"storage_temporary_bucket"`
+}
+
+func DefaultFileVariable() FileVariable {
+	return FileVariable{
+		DefaultImageAllowedTypes: []string{mime.ImageJPEG, mime.ImagePNG}, // support png and jpeg.
+		DefaultMaxSize:           3 * 1024 * 1024,                         // 1MB
+		UploadSessionExpiration:  60,                                      // 1m
+		TemporaryFileExpiration:  10 * 60,                                 // 10m
+		StorageImageBucket:       "images",
+		StorageTemporaryBucket:   "temporary-files",
+	}
+}
+
+type UserVariable struct {
+	AvatarAllowedTypes []string `envconfig:"avatar_allowed_types"`
+	AvatarMaxSize      int      `envconfig:"avatar_max_size"`
+
+	// AvatarPolicyTokenExpiration is the duration during which the user can
+	// request the file-service validating the policy_token along with file
+	// metadata to obtain an upload_token.
+	AvatarPolicyTokenExpiration int `envconfig:"avatar_policy_token_expiration"`
+}
+
+func DefaultUserVariable() UserVariable {
+	return UserVariable{
+		AvatarAllowedTypes:          []string{mime.ImageJPEG, mime.ImagePNG}, // support png and jpeg.
+		AvatarMaxSize:               3 * 1024 * 1024,                         // 3MB
+		AvatarPolicyTokenExpiration: 60,                                      // 1m
 	}
 }

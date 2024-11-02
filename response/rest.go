@@ -106,9 +106,15 @@ func RESTWriteAndLogInvalidRequestError(ctx context.Context, w http.ResponseWrit
 	var code int
 	response := &RESTResponse{}
 	switch {
-	case xerror.Is(err, xhttp.ErrHTTPBadRequest, errordef.ErrRequestInvalid):
+	case xerror.Is(err, xhttp.ErrHTTPBadRequest):
 		code = http.StatusBadRequest
-		response = NewRESTErrorResponseWithMessage(ctx, "invalid_request", err.Error())
+		response = NewRESTErrorResponse(ctx, xerror.Enrich(errordef.ErrRequestInvalid, err.Error()))
+	case xerror.Is(err, errordef.ErrRequestInvalid):
+		code = http.StatusBadRequest
+		response = NewRESTErrorResponse(ctx, err)
+	case errors.Is(err, xhttp.ErrHTTPTooLarge):
+		code = http.StatusRequestEntityTooLarge
+		response = NewRESTErrorResponse(ctx, err)
 	default:
 		code = http.StatusInternalServerError
 		response = NewRESTUnexpectedErrorResponse(ctx)
