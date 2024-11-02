@@ -114,7 +114,7 @@ func RESTWriteAndLogInvalidRequestError(ctx context.Context, w http.ResponseWrit
 		response = NewRESTErrorResponse(ctx, err)
 	case errors.Is(err, xhttp.ErrHTTPTooLarge):
 		code = http.StatusRequestEntityTooLarge
-		response = NewRESTErrorResponse(ctx, xerror.Enrich(errordef.ErrRequestTooLarge, err.Error()))
+		response = NewRESTErrorResponse(ctx, err)
 	default:
 		code = http.StatusInternalServerError
 		response = NewRESTUnexpectedErrorResponse(ctx)
