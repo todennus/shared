@@ -25,34 +25,40 @@ var ReadOnlyScopes = make(map[string]DescriptiveScope)
 var Engine = scope.NewEngine()
 
 var (
-	OfflineAccess = standard("offline_access", "Maintain access to resource even if user is not present").readonly()
+	OfflineAccess = standard("offline_access", "Maintain access to the resource even if the user is not present").readonly()
 )
 
 var (
 	// User
-	UserReadUserProfile = user("read:user.profile", "Grant read-only access to user profile").readonly()
+	UserReadUserProfile  = user("read:user.profile", "Grant read-only access to the user's profile").readonly()
+	UserReadUserAvatar   = user("read:user.avatar", "Grant read-only access to the user's avatar").readonly()
+	UserUpdateUserAvatar = user("update:user.avatar", "Grant permission to update the user's avatar")
 
 	// Client
-	UserReadClientProfile = user("read:client.profile", "Grant read-only access to client profile").readonly()
-	UserCreateClient      = user("create:client", "Grant permission to create a client")
+	UserReadClientProfile = user("read:client.profile", "Grant read-only access to the client's profile").readonly()
+	UserCreateClient      = user("create:client", "Grant permission to create new clients")
 )
 
 var (
 	// Client
-	AppReadClientOwner   = app("read:client.owner", "Grant read-only access to client owner id").readonly()
-	AppReadClientProfile = app("read:client.profile", "Grant read-only access to client profile").readonly()
+	AppReadClientOwner   = app("read:client.owner", "Grant read-only access to the client's owner id").readonly()
+	AppReadClientProfile = app("read:client.profile", "Grant read-only access to the client's profile").readonly()
 )
 
 var (
 	// User
-	AdminReadUserProfile = admin("read:user.profile", "Grant admin read-only access to user profile").readonly()
-	AdminValidateUser    = admin("validate:user", "Grant admin permission to validate user credentials").readonly()
-	AdminCreateUser      = admin("create:user", "Grant admin permission to create a new user")
+	AdminReadUserProfile = admin("read:user.profile", "Grant read-only access to all users' profiles").readonly()
+	AdminValidateUser    = admin("validate:user", "Grant permission to validate all users' credentials")
+	AdminCreateUser      = admin("create:user", "Grant permission to create new users")
 
 	// Client
-	AdminReadClientProfile = admin("read:client.profile", "Grant admin read-only access to client profile").readonly()
-	AdminValidateClient    = admin("validate:client", "Grant admin permission to validate client").readonly()
-	AdminCreateClient      = admin("create:client", "Grant admin permission to create a client")
+	AdminReadClientProfile = admin("read:client.profile", "Grant read-only access to all client profiles").readonly()
+	AdminValidateClient    = admin("validate:client", "Grant permission to validate the client's credentials")
+	AdminCreateClient      = admin("create:client", "Grant permission to create new clients")
+
+	// File
+	AdminValidateFilePolicy   = admin("validate:file.policy", "Grant permission to read the file policy from policy source")
+	AdminCommandTemporaryFile = admin("command:file.temporary", "Grant permission to give a command to a temporary file")
 )
 
 func user(value, description string) *titledScope[User] {

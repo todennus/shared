@@ -2,29 +2,51 @@ package errordef
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/todennus/x/xerror"
 )
 
 var (
-	ErrServer        = xerror.Enrich(errors.New("server_error"), "an unexpected error occurred")
-	ErrServerTimeout = xerror.Enrich(errors.New("server_timeout"), "server timeout")
+	ErrServer        = xerror.Enrich(unique.New("server_error"), "an unexpected error occurred")
+	ErrServerTimeout = xerror.Enrich(unique.New("server_timeout"), "server timeout")
 
-	ErrRequestInvalid = errors.New("invalid_request")
-	ErrDuplicated     = errors.New("duplicated")
-	ErrNotFound       = errors.New("not_found")
+	ErrRequestInvalid  = unique.New("invalid_request")
+	ErrRequestTooLarge = unique.New("too_large_request")
+	ErrDuplicated      = unique.New("duplicated")
+	ErrNotFound        = unique.New("not_found")
 
-	ErrCredentialsInvalid = errors.New("invalid_credentials")
+	ErrCredentialsInvalid = unique.New("invalid_credentials")
 
-	ErrUnauthenticated = errors.New("unauthenticated")
-	ErrForbidden       = errors.New("forbidden")
+	ErrUnauthenticated = unique.New("unauthenticated")
+	ErrForbidden       = unique.New("forbidden")
+
+	ErrClientInvalidType = unique.New("invalid_client_type")
+
+	// File error
+	ErrFileMismatchedSize = unique.New("mismatched_file_size")
+	ErrFileMismatchedType = unique.New("mismatched_file_type")
+	ErrFileInvalidContent = unique.New("invalid_file_content")
 
 	// OAuth2 flow error
-	ErrOAuth2ClientInvalid = errors.New("invalid_client")
-	ErrOAuth2ScopeInvalid  = errors.New("invalid_scope")
-	ErrOAuth2AccessDenied  = errors.New("access_denied")
-	ErrOAuth2InvalidGrant  = errors.New("invalid_grant")
+	ErrOAuth2ClientInvalid = unique.New("invalid_client")
+	ErrOAuth2ScopeInvalid  = unique.New("invalid_scope")
+	ErrOAuth2AccessDenied  = unique.New("access_denied")
+	ErrOAuth2InvalidGrant  = unique.New("invalid_grant")
 )
 
 // For handling domain error
 var DomainWrapper = xerror.NewWrapperConfigs(ErrServer, ErrDomainKnown)
+
+var unique = uniqueError{}
+
+type uniqueError map[string]error
+
+func (u uniqueError) New(s string) error {
+	if _, ok := u[s]; ok {
+		panic(fmt.Sprintf("duplicated error %s", s))
+	}
+
+	u[s] = errors.New(s)
+	return u[s]
+}

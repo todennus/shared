@@ -41,32 +41,9 @@ func ConvertGRPCError(err error) error {
 		return err
 	}
 
-	switch code {
-	case "server_error":
-		return xerror.Enrich(ErrServer, description)
-	case "server_timeout":
-		return xerror.Enrich(ErrServerTimeout, description)
-	case "invalid_request":
-		return xerror.Enrich(ErrRequestInvalid, description)
-	case "duplicated":
-		return xerror.Enrich(ErrDuplicated, description)
-	case "not_found":
-		return xerror.Enrich(ErrNotFound, description)
-	case "invalid_credentials":
-		return xerror.Enrich(ErrCredentialsInvalid, description)
-	case "unauthenticated":
-		return xerror.Enrich(ErrUnauthenticated, description)
-	case "forbidden":
-		return xerror.Enrich(ErrForbidden, description)
-	case "invalid_client":
-		return xerror.Enrich(ErrOAuth2ClientInvalid, description)
-	case "invalid_scope":
-		return xerror.Enrich(ErrOAuth2ScopeInvalid, description)
-	case "access_denied":
-		return xerror.Enrich(ErrOAuth2AccessDenied, description)
-	case "invalid_grant":
-		return xerror.Enrich(ErrOAuth2InvalidGrant, description)
-	default:
-		return err
+	if e, ok := unique[code]; ok {
+		return xerror.Enrich(e, description)
 	}
+
+	return err
 }

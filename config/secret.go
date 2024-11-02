@@ -4,6 +4,7 @@ type Secret struct {
 	Postgres PostgresSecret `envconfig:"postgres"`
 	OAuth2   OAuth2Secret   `envconfig:"oauth2"`
 	Redis    RedisSecret    `envconfig:"redis"`
+	Minio    MinioSecret    `envconfig:"minio"`
 	Session  SessionSecret  `envconfig:"session"`
 	Service  ServiceSecret  `envconfig:"service"`
 }
@@ -27,6 +28,11 @@ type OAuth2Secret struct {
 type RedisSecret struct {
 	Username string `envconfig:"username"`
 	Password string `envconfig:"password"`
+}
+
+type MinioSecret struct {
+	AccessKey string `envconfig:"access_key"`
+	SecretKey string `envconfig:"secret_key"`
 }
 
 type SessionSecret struct {
