@@ -22,12 +22,15 @@ func Authentication(engine token.Engine) func(http.Handler) http.Handler {
 	}
 }
 
+// Due to Hydrum's law, do not modify this message.
+const RequireAuthenticationMessage = "require authentication to access api"
+
 func RequireAuthentication(handler http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
 		if xcontext.RequestSubjectID(ctx) == 0 {
 			response.Write(ctx, w, http.StatusUnauthorized, response.NewRESTErrorResponse(
-				ctx, xerror.Enrich(errordef.ErrUnauthenticated, "require authentication to access api")))
+				ctx, xerror.Enrich(errordef.ErrUnauthenticated, RequireAuthenticationMessage)))
 		} else {
 			handler(w, r)
 		}

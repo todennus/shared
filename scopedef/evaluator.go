@@ -10,12 +10,12 @@ import (
 )
 
 type evaluator struct {
-	scopes scope.Scopes
-	result bool
+	scopes      scope.Scopes
+	isSatisfied bool
 }
 
 func Eval(scopes scope.Scopes) *evaluator {
-	return &evaluator{scopes: scopes, result: false}
+	return &evaluator{scopes: scopes, isSatisfied: false}
 }
 
 type readyEvaluator struct {
@@ -23,67 +23,67 @@ type readyEvaluator struct {
 }
 
 func (e *evaluator) RequireAdmin(scope *titledScope[Admin]) *readyEvaluator {
-	if e.result {
+	if e.isSatisfied {
 		return &readyEvaluator{e}
 	}
 
 	if e.scopes.Contains(scope) {
-		e.result = true
+		e.isSatisfied = true
 	}
 
 	return &readyEvaluator{e}
 }
 
 func (e *evaluator) RequireAnyUser(scope *titledScope[User]) *readyEvaluator {
-	if e.result {
+	if e.isSatisfied {
 		return &readyEvaluator{e}
 	}
 
 	if e.scopes.Contains(scope) {
-		e.result = true
+		e.isSatisfied = true
 	}
 
 	return &readyEvaluator{e}
 }
 
 func (e *evaluator) RequireUser(ctx context.Context, scope *titledScope[User], userID snowflake.ID) *readyEvaluator {
-	if e.result {
+	if e.isSatisfied {
 		return &readyEvaluator{e}
 	}
 
 	if e.scopes.Contains(scope) && xcontext.RequestSubjectID(ctx) == userID {
-		e.result = true
+		e.isSatisfied = true
 	}
 
 	return &readyEvaluator{e}
 }
 
 func (e *evaluator) RequireAnyApp(scope *titledScope[App]) *readyEvaluator {
-	if e.result {
+	if e.isSatisfied {
 		return &readyEvaluator{e}
 	}
 
 	if e.scopes.Contains(scope) {
-		e.result = true
+		e.isSatisfied = true
 	}
 
 	return &readyEvaluator{e}
 }
 
 func (e *evaluator) RequireApp(ctx context.Context, scope *titledScope[App], clientID snowflake.ID) *readyEvaluator {
-	if e.result {
+	if e.isSatisfied {
 		return &readyEvaluator{e}
 	}
 
 	if e.scopes.Contains(scope) && xcontext.RequestSubjectID(ctx) == clientID {
-		e.result = true
+		e.isSatisfied = true
 	}
 
 	return &readyEvaluator{e}
 }
 
 func (e *readyEvaluator) IsSatisfied() bool {
-	return e.result
+	return e.isSatisfied
 }
 
 func (e *readyEvaluator) IsUnsatisfied() bool {
@@ -91,13 +91,13 @@ func (e *readyEvaluator) IsUnsatisfied() bool {
 }
 
 func (e *readyEvaluator) SetIfUnsatisfied(obj, value any) {
-	if !e.result {
+	if !e.isSatisfied {
 		reflect.ValueOf(obj).Elem().Set(reflect.ValueOf(value))
 	}
 }
 
 func (a *readyEvaluator) FilterIfUnsatisfied(obj ...any) {
-	if !a.result {
+	if !a.isSatisfied {
 		for i := range obj {
 			reflect.ValueOf(obj[i]).Elem().Set(reflect.Zero(reflect.TypeOf(obj[i]).Elem()))
 		}
