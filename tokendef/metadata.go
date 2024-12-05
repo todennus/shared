@@ -50,7 +50,7 @@ func (claims *OAuth2StandardClaims) Valid() error {
 		return fmt.Errorf("%w: %s", token.ErrTokenInvalidFormat, "invalid jti")
 	}
 
-	if _, err := snowflake.ParseString(claims.ID); err != nil {
+	if _, err := snowflake.ParseString(claims.Subject); err != nil {
 		return fmt.Errorf("%w: %s", token.ErrTokenInvalidFormat, "invalid sub")
 	}
 

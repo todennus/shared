@@ -13,9 +13,9 @@ import (
 func ConvertGormError(err error) error {
 	switch {
 	case xerror.Is(err, gorm.ErrRecordNotFound):
-		return ErrNotFound
+		return xerror.Enrich(ErrNotFound, err.Error())
 	case errors.Is(err, gorm.ErrDuplicatedKey):
-		return ErrDuplicated
+		return xerror.Enrich(ErrDuplicated, err.Error())
 	default:
 		return err
 	}

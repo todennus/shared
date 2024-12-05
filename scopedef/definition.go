@@ -29,36 +29,31 @@ var (
 )
 
 var (
-	// User
 	UserReadUserProfile  = user("read:user.profile", "Grant read-only access to the user's profile").readonly()
 	UserReadUserAvatar   = user("read:user.avatar", "Grant read-only access to the user's avatar").readonly()
 	UserUpdateUserAvatar = user("update:user.avatar", "Grant permission to update the user's avatar")
 
-	// Client
 	UserReadClientProfile = user("read:client.profile", "Grant read-only access to the client's profile").readonly()
 	UserCreateClient      = user("create:client", "Grant permission to create new clients")
 )
 
 var (
-	// Client
 	AppReadClientOwner   = app("read:client.owner", "Grant read-only access to the client's owner id").readonly()
 	AppReadClientProfile = app("read:client.profile", "Grant read-only access to the client's profile").readonly()
 )
 
 var (
-	// User
 	AdminReadUserProfile = admin("read:user.profile", "Grant read-only access to all users' profiles").readonly()
 	AdminValidateUser    = admin("validate:user", "Grant permission to validate all users' credentials")
 	AdminCreateUser      = admin("create:user", "Grant permission to create new users")
 
-	// Client
 	AdminReadClientProfile = admin("read:client.profile", "Grant read-only access to all client profiles").readonly()
 	AdminValidateClient    = admin("validate:client", "Grant permission to validate the client's credentials")
 	AdminCreateClient      = admin("create:client", "Grant permission to create new clients")
 
-	// File
-	AdminValidateFilePolicy   = admin("validate:file.policy", "Grant permission to read the file policy from policy source")
-	AdminCommandTemporaryFile = admin("command:file.temporary", "Grant permission to give a command to a temporary file")
+	AdminRegisterFilePolicy          = admin("register:file.policy", "Grant permission to register file upload policy")
+	AdminCreatePresignedFile         = admin("create:file.presigned_url", "Grant permission to create file presigned url")
+	AdminChangeRefcountFileOwnership = admin("change:file.refcount", "Grant permission to change ref count of file ownership")
 )
 
 func user(value, description string) *titledScope[User] {

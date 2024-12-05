@@ -3,6 +3,7 @@ package config
 import (
 	"github.com/todennus/x/logging"
 	"github.com/todennus/x/mime"
+	"github.com/todennus/x/xbytes"
 	gormlogger "gorm.io/gorm/logger"
 )
 
@@ -173,47 +174,43 @@ func DefaultServiceVariable() ServiceVariable {
 }
 
 type FileVariable struct {
-	DefaultImageAllowedTypes []string `envconfig:"default_image_allowed_types"`
-	DefaultMaxSize           int      `envconfig:"default_max_size"`
+	// MaxInMemory indicates the maximum number of bytes a file can store in
+	// memory. If the file size exceeds this value, it will be stored in a
+	// temporary file instead.
+	MaxInMemory int64 `envconfig:"max_in_memory"`
 
-	// UploadSessionExpiration is the duration during which the user can use the
+	// UploadTokenExpiration is the duration during which the user can use the
 	// upload_token to upload a file.
-	UploadSessionExpiration int `envconfig:"upload_session_expiration"`
+	UploadTokenExpiration int `envconfig:"upload_token_expiration"`
 
-	// TemporaryFileExpiration is the duration during which the user can use the
-	// session_token to performe a specific action on the uploaded file like
-	// setting an avatar, sending an image to a chat room, etc.
-	TemporaryFileExpiration int `envconfig:"temporary_file_expiration"`
+	// TokenExpiration is the duration during which the user can use the
+	// file_token to interact with other APIs.
+	TokenExpiration int `envconfig:"token_expiration"`
 
-	StorageImageBucket     string `envconfig:"storage_image_bucket"`
-	StorageTemporaryBucket string `envconfig:"storage_temporary_bucket"`
+	StorageImageBucket string `envconfig:"storage_image_bucket"`
+	StorageOtherBucket string `envconfig:"storage_other_bucket"`
 }
 
 func DefaultFileVariable() FileVariable {
 	return FileVariable{
-		DefaultImageAllowedTypes: []string{mime.ImageJPEG, mime.ImagePNG}, // support png and jpeg.
-		DefaultMaxSize:           3 * 1024 * 1024,                         // 1MB
-		UploadSessionExpiration:  60,                                      // 1m
-		TemporaryFileExpiration:  10 * 60,                                 // 10m
-		StorageImageBucket:       "images",
-		StorageTemporaryBucket:   "temporary-files",
+		MaxInMemory:           10 * xbytes.MiB,
+		TokenExpiration:       60, // 1m
+		UploadTokenExpiration: 60, // 1m
+		StorageImageBucket:    "images",
+		StorageOtherBucket:    "files",
 	}
 }
 
 type UserVariable struct {
-	AvatarAllowedTypes []string `envconfig:"avatar_allowed_types"`
-	AvatarMaxSize      int      `envconfig:"avatar_max_size"`
-
-	// AvatarPolicyTokenExpiration is the duration during which the user can
-	// request the file-service validating the policy_token along with file
-	// metadata to obtain an upload_token.
-	AvatarPolicyTokenExpiration int `envconfig:"avatar_policy_token_expiration"`
+	AvatarAllowedTypes           []string `envconfig:"avatar_allowed_types"`
+	AvatarMaxSize                int64    `envconfig:"avatar_max_size"`
+	AvatarPresignedURLExpiration int      `envconfig:"avatar_presigned_url_expiration"`
 }
 
 func DefaultUserVariable() UserVariable {
 	return UserVariable{
-		AvatarAllowedTypes:          []string{mime.ImageJPEG, mime.ImagePNG}, // support png and jpeg.
-		AvatarMaxSize:               3 * 1024 * 1024,                         // 3MB
-		AvatarPolicyTokenExpiration: 60,                                      // 1m
+		AvatarAllowedTypes:           []string{mime.ImageJPEG, mime.ImagePNG}, // support png and jpeg.
+		AvatarMaxSize:                3 * xbytes.MiB,                          // 3MiB
+		AvatarPresignedURLExpiration: 10 * 60,                                 // 10m
 	}
 }

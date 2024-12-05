@@ -20,6 +20,7 @@ const (
 	scopeKey
 	sessionKey
 	sessionManagerKey
+	dbtxKey
 )
 
 func WithLogger(ctx context.Context, logger logging.Logger) context.Context {

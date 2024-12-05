@@ -32,10 +32,10 @@ github.com/redis/go-redis/v9 v9.7.0 h1:HhLSs+B6O021gwzl+locl0zEDnyNkxMtf/Z3NNBMa
 github.com/redis/go-redis/v9 v9.7.0/go.mod h1:f6zhXITC7JUJIlPEiBOTXxJgPLdZcA93GewI7inzyWw=
 github.com/stretchr/testify v1.9.0 h1:HtqpIVDClZ4nwg75+f6Lvsy/wHu+3BoSGCbBAcpTsTg=
 github.com/stretchr/testify v1.9.0/go.mod h1:r2ic/lqez/lEtzL7wO/rwa5dbSLXVDPFyf8C91i36aY=
-github.com/todennus/proto v0.4.0 h1:O+H1eoRk0IHYXJpBEcaXZqa+m851W5fd3LHeHERAtFA=
-github.com/todennus/proto v0.4.0/go.mod h1:KJntlZG3lvSZTF954xU/D4TLIcE0wptBTYv5PbmOSq8=
-github.com/todennus/x v0.4.0 h1:Vb/eUAjx95aVBEUnWQWHXFFSUeYXAkxN830D7uneobk=
-github.com/todennus/x v0.4.0/go.mod h1:m2SrA8JvtXdFpCjxT0Q8Kesi+izQwIr9O+WcWxrtpVk=
+github.com/todennus/proto v0.5.0 h1:8RnpiQ3BobDCO9/1naUwwf7b9kwsiiSIjwilwB9sE9k=
+github.com/todennus/proto v0.5.0/go.mod h1:KJntlZG3lvSZTF954xU/D4TLIcE0wptBTYv5PbmOSq8=
+github.com/todennus/x v0.5.0 h1:VqVOPmVFltF/0fYeusKUZdPZ1mrjQLcjUG9s40FmZEI=
+github.com/todennus/x v0.5.0/go.mod h1:m2SrA8JvtXdFpCjxT0Q8Kesi+izQwIr9O+WcWxrtpVk=
 github.com/xybor-x/snowflake v1.0.0 h1:cpBLbuBeUrHeBN7behThldVqJ0ZTtQD/M87Vk67Xpl4=
 github.com/xybor-x/snowflake v1.0.0/go.mod h1:oriPbmMgpBuLkAU1kcwP+JWWvis7NWWN5YAM/B2J95w=
 golang.org/x/crypto v0.28.0 h1:GBDwsMXVQi34v5CCYUm2jkJvu4cbtru2U4TN2PSyQnw=
