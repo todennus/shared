@@ -1,10 +1,19 @@
 package enumdef
 
-import "github.com/todennus/x/enum"
-
-type UserRole int
-
-var (
-	UserRoleAdmin = enum.New[UserRole](1, "admin")
-	UserRoleUser  = enum.New[UserRole](2, "user")
+import (
+	"github.com/xybor-x/enum"
 )
+
+type userRole any
+type UserRole = enum.WrapEnum[userRole]
+
+const (
+	UserRoleUser UserRole = iota
+	UserRoleAdmin
+)
+
+func init() {
+	enum.Map(UserRoleUser, "user")
+	enum.Map(UserRoleAdmin, "admin")
+	enum.Finalize[UserRole]()
+}
